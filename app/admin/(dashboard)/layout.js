@@ -16,6 +16,7 @@ export default function AdminDashboardLayout({ children }) {
           <Link href="/admin/orders" className="block px-4 py-3 rounded hover:bg-[#4A2C2A] transition">Orders</Link>
           <Link href="/admin/products" className="block px-4 py-3 rounded hover:bg-[#4A2C2A] transition">Products</Link>
           <Link href="/admin/categories" className="block px-4 py-3 rounded hover:bg-[#4A2C2A] transition">Categories</Link>
+          <Link href="/admin/subscribers" className="block px-4 py-3 rounded hover:bg-[#4A2C2A] transition">Subscribers</Link>
           <Link href="/" className="block px-4 py-3 rounded hover:bg-red-900/50 text-red-400 mt-8 transition">
             Logout
           </Link>

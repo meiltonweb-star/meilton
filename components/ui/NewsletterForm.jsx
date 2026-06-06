@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore/lite';
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('');
@@ -14,22 +16,10 @@ export default function NewsletterForm() {
     setSubscribing(true);
     
     try {
-      const scriptUrl = process.env.NEXT_PUBLIC_NEWSLETTER_SCRIPT_URL;
-      if (scriptUrl && scriptUrl.trim() !== '') {
-        const payload = {
-          email: email,
-          dateJoined: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-        };
-        
-        await fetch(scriptUrl, {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-        });
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.warn("NEXT_PUBLIC_NEWSLETTER_SCRIPT_URL is not set.");
-      }
+      await addDoc(collection(db, 'subscribers'), {
+        email: email.trim().toLowerCase(),
+        dateJoined: serverTimestamp(),
+      });
       
       setSubscribed(true);
       setEmail('');
