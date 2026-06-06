@@ -3,7 +3,7 @@ import Image from 'next/image';
 import ProductCard from '@/components/ui/ProductCard';
 import NewsletterForm from '@/components/ui/NewsletterForm';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where, limit } from 'firebase/firestore';
+import { collection, getDocs, query, where, limit } from 'firebase/firestore/lite';
 
 export default async function Home() {
   let featuredProducts = [];

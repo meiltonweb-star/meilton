@@ -4,7 +4,7 @@ import ProductCard from '@/components/ui/ProductCard';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore/lite';
 
 export default function CategoryPage() {
   const params = useParams();

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore/lite';
 import Link from 'next/link';
 
 export default function DashboardOverview() {

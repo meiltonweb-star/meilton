@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore/lite';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import LogoutButton from './LogoutButton';
 import { useEffect, useState } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, orderBy, query, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, doc, deleteDoc, updateDoc } from 'firebase/firestore/lite';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState([]);
