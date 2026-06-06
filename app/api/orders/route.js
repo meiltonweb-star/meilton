@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebaseAdmin';
-import { appendOrderToSheet } from '@/lib/googleSheets';
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+// import { appendOrderToSheet } from '@/lib/googleSheets'; // Disabled for Cloudflare Pages compatibility
 
 export async function POST(request) {
   try {
@@ -17,7 +18,7 @@ export async function POST(request) {
     const productName = 'Meilton Chronograph Watch';
     const quantity = 1;
 
-    // 1. Save to Firestore
+    // 1. Save to Firestore (Using Client SDK which works on Cloudflare Edge)
     const orderDoc = {
       orderId,
       createdAt: date,
@@ -27,35 +28,26 @@ export async function POST(request) {
       paymentMethod: 'COD'
     };
 
-    if (adminDb) {
+    if (db) {
       try {
-        await adminDb.collection('orders').doc(orderId).set(orderDoc);
+        await setDoc(doc(db, 'orders', orderId), orderDoc);
       } catch (dbError) {
-        console.error("Firebase admin init might fail without credentials in demo:", dbError);
+        console.error("Firebase db init might fail without credentials in demo:", dbError);
       }
     }
 
-    // 2. Save to Google Sheets
-    // OrderData: [OrderID, Date, ProductName, Quantity, CustomerName, Phone, Address, City, State, Pincode, Status]
+    // 2. Save to Google Sheets (Disabled for Edge runtime compatibility)
+    /*
     const sheetData = [
-      orderId, 
-      date, 
-      productName, 
-      quantity, 
-      fullName, 
-      mobile, 
-      address, 
-      city, 
-      state, 
-      pincode, 
-      status
+      orderId, date, productName, quantity, fullName, mobile, address, city, state, pincode, status
     ];
 
     try {
-      await appendOrderToSheet(sheetData);
+      // await appendOrderToSheet(sheetData);
     } catch (sheetError) {
-      console.error("Failed to append to Google Sheets, but order processed:", sheetError);
+      console.error("Failed to append to Google Sheets:", sheetError);
     }
+    */
 
     return NextResponse.json({ success: true, orderId }, { status: 200 });
   } catch (error) {
