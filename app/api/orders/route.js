@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebaseAdmin';
-import { appendOrderToSheet } from '@/lib/googleSheets';
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 export async function POST(request) {
   try {
@@ -13,11 +13,10 @@ export async function POST(request) {
     const status = 'New';
     
     // Hardcoded product details for demo purposes based on productId
-    // In production, fetch this from Firestore
     const productName = 'Meilton Chronograph Watch';
     const quantity = 1;
 
-    // 1. Save to Firestore
+    // Save to Firestore using the client/Edge compatible SDK
     const orderDoc = {
       orderId,
       createdAt: date,
@@ -27,34 +26,10 @@ export async function POST(request) {
       paymentMethod: 'COD'
     };
 
-    if (adminDb) {
-      try {
-        await adminDb.collection('orders').doc(orderId).set(orderDoc);
-      } catch (dbError) {
-        console.error("Firebase admin init might fail without credentials in demo:", dbError);
-      }
-    }
-
-    // 2. Save to Google Sheets
-    // OrderData: [OrderID, Date, ProductName, Quantity, CustomerName, Phone, Address, City, State, Pincode, Status]
-    const sheetData = [
-      orderId, 
-      date, 
-      productName, 
-      quantity, 
-      fullName, 
-      mobile, 
-      address, 
-      city, 
-      state, 
-      pincode, 
-      status
-    ];
-
     try {
-      await appendOrderToSheet(sheetData);
-    } catch (sheetError) {
-      console.error("Failed to append to Google Sheets, but order processed:", sheetError);
+      await setDoc(doc(db, 'orders', orderId), orderDoc);
+    } catch (dbError) {
+      console.error("Firebase db write failed:", dbError);
     }
 
     return NextResponse.json({ success: true, orderId }, { status: 200 });
