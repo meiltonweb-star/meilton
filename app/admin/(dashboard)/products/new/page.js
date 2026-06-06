@@ -51,21 +51,22 @@ export default function AddProductPage() {
     setLoading(true);
     
     try {
-      // 1. Upload image to Cloudinary via our secure API route
+      // 1. Upload image to Cloudinary directly from browser using Unsigned Preset
       const uploadData = new FormData();
       uploadData.append('file', imageFile);
+      uploadData.append('upload_preset', 'meilton_products');
       
-      const uploadRes = await fetch('/api/upload', {
+      const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dknzdfzmq/image/upload', {
         method: 'POST',
         body: uploadData,
       });
       
       if (!uploadRes.ok) {
         const errorData = await uploadRes.json();
-        throw new Error(errorData.error || 'Failed to upload image');
+        throw new Error(errorData.error?.message || 'Failed to upload image');
       }
       
-      const { url: cloudinaryUrl } = await uploadRes.json();
+      const { secure_url: cloudinaryUrl } = await uploadRes.json();
 
       // 2. Generate a URL-friendly slug
       const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');

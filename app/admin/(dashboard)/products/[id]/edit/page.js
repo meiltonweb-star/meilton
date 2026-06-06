@@ -95,22 +95,23 @@ export default function EditProductPage() {
     try {
       let finalImageUrl = formData.imageUrl;
 
-      // 1. If a new image was selected, upload it to Cloudinary
+      // 1. If a new image was selected, upload it to Cloudinary directly
       if (imageFile) {
         const uploadData = new FormData();
         uploadData.append('file', imageFile);
+        uploadData.append('upload_preset', 'meilton_products');
         
-        const uploadRes = await fetch('/api/upload', {
+        const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dknzdfzmq/image/upload', {
           method: 'POST',
           body: uploadData,
         });
         
         if (!uploadRes.ok) {
           const errorData = await uploadRes.json();
-          throw new Error(errorData.error || 'Failed to upload image');
+          throw new Error(errorData.error?.message || 'Failed to upload image');
         }
         
-        const { url: cloudinaryUrl } = await uploadRes.json();
+        const { secure_url: cloudinaryUrl } = await uploadRes.json();
         finalImageUrl = cloudinaryUrl;
       }
 
