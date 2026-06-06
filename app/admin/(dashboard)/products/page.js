@@ -54,12 +54,12 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold text-[#4A2C2A]">Products</h1>
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap items-center gap-4">
           <Link 
             href="/admin/products/new" 
-            className="bg-[#C96B3C] hover:bg-[#B45D33] text-white px-6 py-3 rounded shadow-md transition-colors uppercase tracking-widest text-sm font-semibold flex items-center"
+            className="bg-[#C96B3C] hover:bg-[#B45D33] text-white px-4 md:px-6 py-3 rounded shadow-md transition-colors uppercase tracking-widest text-xs md:text-sm font-semibold flex items-center"
           >
             + Add New Product
           </Link>

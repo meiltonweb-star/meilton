@@ -45,8 +45,20 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-bold text-lg mb-1">WhatsApp</h3>
-                    <a href="https://wa.me/919677508238" target="_blank" rel="noopener noreferrer" className="text-[#c96b3c] hover:underline font-medium flex items-center">
+                    <a href="https://wa.me/919894108238" target="_blank" rel="noopener noreferrer" className="text-[#c96b3c] hover:underline font-medium flex items-center">
                       Chat with us <span className="ml-1 text-sm">↗</span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-[#4a2c2a]/5 text-[#c96b3c] rounded-full flex items-center justify-center text-xl mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Instagram</h3>
+                    <a href="https://www.instagram.com/meilton.co" target="_blank" rel="noopener noreferrer" className="text-[#c96b3c] hover:underline font-medium flex items-center">
+                      @meilton.co <span className="ml-1 text-sm">↗</span>
                     </a>
                   </div>
                 </div>

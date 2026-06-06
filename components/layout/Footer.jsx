@@ -10,9 +10,20 @@ export default function Footer() {
             <Link href="/" className="text-3xl font-bold tracking-wider mb-6 inline-block">
               MEILTON<span className="text-[#C96B3C]">.</span>
             </Link>
-            <p className="text-gray-400 leading-relaxed max-w-sm">
+            <p className="text-gray-400 leading-relaxed max-w-sm mb-6">
               Premium dropshipping products curated for exceptional quality and style. Cash on delivery available.
             </p>
+            <div className="flex space-x-4">
+              <a 
+                href="https://www.instagram.com/meilton.co" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-[#C96B3C] hover:text-white transition-all"
+                aria-label="Instagram"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+              </a>
+            </div>
           </div>
 
           <div>

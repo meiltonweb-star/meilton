@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, X } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [allProducts, setAllProducts] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const pathname = usePathname();
 
   // Refs for native event listener attachment
   const searchBtnRef = useRef(null);
@@ -108,6 +110,10 @@ export default function Navbar() {
     }
     return () => { document.body.style.overflow = 'unset'; }
   }, [isSearchOpen]);
+
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <>

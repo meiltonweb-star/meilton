@@ -20,8 +20,10 @@ export default function AddProductPage() {
     isFreeShipping: true,
     shippingCost: '',
     isClosed: false,
-    imageUrl: '', // Changed from file to string
   });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,20 +33,44 @@ export default function AddProductPage() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.imageUrl.trim()) {
-      alert("Please provide a product image URL");
+    if (!imageFile) {
+      alert("Please select a product image");
       return;
     }
     
     setLoading(true);
     
     try {
-      // 1. Generate a URL-friendly slug
+      // 1. Upload image to Cloudinary via our secure API route
+      const uploadData = new FormData();
+      uploadData.append('file', imageFile);
+      
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadData,
+      });
+      
+      if (!uploadRes.ok) {
+        const errorData = await uploadRes.json();
+        throw new Error(errorData.error || 'Failed to upload image');
+      }
+      
+      const { url: cloudinaryUrl } = await uploadRes.json();
+
+      // 2. Generate a URL-friendly slug
       const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-      // 2. Save to Firestore
+      // 3. Save to Firestore
       const productData = {
         name: formData.name,
         slug,
@@ -57,7 +83,7 @@ export default function AddProductPage() {
         isFreeShipping: formData.isFreeShipping,
         shippingCost: formData.isFreeShipping ? 0 : Number(formData.shippingCost),
         isClosed: formData.isClosed,
-        image: formData.imageUrl, // Save the direct URL provided by the user
+        image: cloudinaryUrl, // Save the Cloudinary URL
         createdAt: serverTimestamp()
       };
 
@@ -101,10 +127,18 @@ export default function AddProductPage() {
         {/* Image */}
         <div>
           <h2 className="text-xl font-bold text-[#4A2C2A] border-b pb-2 mb-4">Product Image</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Image Public URL *</label>
-            <input required type="url" name="imageUrl" value={formData.imageUrl} onChange={handleChange} placeholder="https://..." className="w-full border border-gray-300 rounded-md p-3 focus:ring-[#C96B3C] focus:border-[#C96B3C] outline-none" />
-            <p className="text-xs text-gray-500 mt-2">Enter the direct public URL to the image. Ensure the URL ends in .jpg, .png, etc.</p>
+          <div className="flex flex-col space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Select Image *</label>
+              <input required type="file" accept="image/*" onChange={handleImageChange} className="w-full border border-gray-300 rounded-md p-3 focus:ring-[#C96B3C] focus:border-[#C96B3C] outline-none" />
+              <p className="text-xs text-gray-500 mt-2">Image will be uploaded securely to Cloudinary.</p>
+            </div>
+            {imagePreview && (
+              <div className="relative w-40 h-40 rounded-lg overflow-hidden border border-gray-200">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imagePreview} alt="Preview" className="object-cover w-full h-full" />
+              </div>
+            )}
           </div>
         </div>
 
