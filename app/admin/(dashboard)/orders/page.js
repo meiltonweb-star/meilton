@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { db } from '@/lib/firebase';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore/lite';
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -12,14 +12,12 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     async function fetchOrders() {
       try {
-        const querySnapshot = await getDocs(collection(db, 'orders'));
+        const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(100));
+        const querySnapshot = await getDocs(q);
         const ordersList = [];
         querySnapshot.forEach((doc) => {
           ordersList.push(doc.data());
         });
-        
-        // Sort orders descending by orderId (since it includes timestamp) or date
-        ordersList.sort((a, b) => b.orderId.localeCompare(a.orderId));
         
         setOrders(ordersList);
       } catch (error) {
@@ -36,14 +34,6 @@ export default function AdminOrdersPage() {
     <div className="pb-12">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-[#4A2C2A]">Order Management</h1>
-        <a 
-          href="https://docs.google.com/spreadsheets" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-bold flex items-center gap-2 transition"
-        >
-          <span>📊</span> Open Google Sheets Backup
-        </a>
       </div>
       
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
